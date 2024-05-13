@@ -2,6 +2,9 @@ import { Request, Response } from "express";
 import { adminServices } from "./admin.services";
 import catchAsync from "../../utls/CatchAsync";
 import sendResponse from "../../utls/SendResponse";
+import pick from "../../shared/pickFields";
+import { adminFilterdFields } from "./admin.constant";
+import { pageAndSortConstants } from "../../constants/globalConstant";
 
 const createUser = catchAsync(async (req: Request, res: Response) => {
   const result = await adminServices.createAdminIntoDB(req.body);
@@ -16,8 +19,9 @@ const createUser = catchAsync(async (req: Request, res: Response) => {
 
 //Getting All Users
 const getAllUsers = catchAsync(async (req: Request, res: Response) => {
-  const result = await adminServices.getAllUsersFromDB();
-
+  const filter = pick(req?.query, adminFilterdFields);
+  const options = pick(req?.query, pageAndSortConstants);
+  const result = await adminServices.getAllUsersFromDB(filter, options);
   //Send Response
   return sendResponse(res, {
     statusCode: 200,

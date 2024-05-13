@@ -1,5 +1,7 @@
-import { PrismaClient } from "@prisma/client";
+import { Prisma, PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
+import { adminSearchAbleField } from "./admin.constant";
+import calculatePagination from "../../helper/pageCalculation";
 
 const prisma = new PrismaClient();
 //Create Services
@@ -30,8 +32,45 @@ const createAdminIntoDB = async (payload: any) => {
 };
 
 //All Users Reterive
-const getAllUsersFromDB = async () => {
-  const result = await prisma.admin.findMany();
+const getAllUsersFromDB = async (filter: any, options: any) => {
+  const { search, ...filterData } = filter;
+  const { skip, limit, sort, sortOrder } = calculatePagination(options);
+  const andCondition: Prisma.AdminWhereInput[] = [];
+
+  //Search Conditon Query
+  if (filter.search) {
+    andCondition.push({
+      OR: adminSearchAbleField.map((field) => {
+        return {
+          [field]: {
+            contains: filter?.search,
+            mode: "insensitive",
+          },
+        };
+      }),
+    });
+  }
+
+  //Filter Conditons Query
+  if (Object.keys(filterData).length > 0) {
+    andCondition.push({
+      AND: Object.keys(filterData).map((keys) => ({
+        [keys]: {
+          equals: filterData[keys],
+        },
+      })),
+    });
+  }
+
+  const whereCondition: Prisma.AdminWhereInput = { AND: andCondition };
+  const result = await prisma.admin.findMany({
+    where: whereCondition,
+    skip,
+    take: limit,
+    orderBy: {
+      [sort]: sortOrder,
+    },
+  });
   return result;
 };
 
