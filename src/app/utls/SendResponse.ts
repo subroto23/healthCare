@@ -1,17 +1,25 @@
 import { Response } from "express";
 
+type IMeta = {
+  page: number;
+  limit: number;
+  total: number;
+};
+
 type TResponse<T> = {
   statusCode: number;
   success: boolean;
   message: string;
-  data: T;
+  meta?: IMeta;
+  data: T | null | undefined;
 };
 
 const sendResponse = <T>(res: Response, data: TResponse<T>) => {
   return res.status(data?.statusCode).json({
     success: data?.success,
     message: data?.message,
-    data: data?.data,
+    meta: data?.meta || null || undefined,
+    data: data?.data || null || undefined,
   });
 };
 

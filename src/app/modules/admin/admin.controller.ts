@@ -5,12 +5,13 @@ import sendResponse from "../../utls/SendResponse";
 import pick from "../../shared/pickFields";
 import { adminFilterdFields } from "./admin.constant";
 import { pageAndSortConstants } from "../../constants/globalConstant";
+import httpStatus from "http-status";
 
 const createUser = catchAsync(async (req: Request, res: Response) => {
   const result = await adminServices.createAdminIntoDB(req.body);
   //Send Response
   return sendResponse(res, {
-    statusCode: 200,
+    statusCode: httpStatus.OK,
     success: true,
     message: "Admin Created successfully",
     data: result,
@@ -23,9 +24,11 @@ const getAllUsers = catchAsync(async (req: Request, res: Response) => {
   const options = pick(req?.query, pageAndSortConstants);
   const result = await adminServices.getAllUsersFromDB(filter, options);
   //Send Response
-  return res.status(200).json({
+  //Send Response
+  return sendResponse(res, {
+    statusCode: httpStatus.OK,
     success: true,
-    message: "Admin Reterive successfully",
+    message: "Admins reterived successfully",
     meta: result?.meta,
     data: result?.data,
   });
@@ -37,7 +40,7 @@ const getSingleUser = catchAsync(async (req: Request, res: Response) => {
   const result = await adminServices.getSingleUsersFromDB(id);
   //Send Response
   return sendResponse(res, {
-    statusCode: 200,
+    statusCode: httpStatus.OK,
     success: true,
     message: "Admin reterived successfully",
     data: result,
@@ -51,7 +54,7 @@ const updateUser = catchAsync(async (req: Request, res: Response) => {
   const result = await adminServices.updateUserFromDB(id, data);
   //Send Response
   return sendResponse(res, {
-    statusCode: 200,
+    statusCode: httpStatus.OK,
     success: true,
     message: "Admin Updated successfully",
     data: result,
@@ -64,7 +67,7 @@ const deleteUser = catchAsync(async (req: Request, res: Response) => {
   const result = await adminServices.deleteUserFromDB(id);
   //Send Response
   return sendResponse(res, {
-    statusCode: 200,
+    statusCode: httpStatus.OK,
     success: true,
     message: "Admin Deleted successfully",
     data: result,
