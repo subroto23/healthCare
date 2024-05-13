@@ -12,7 +12,7 @@ const createUser = catchAsync(async (req: Request, res: Response) => {
   return sendResponse(res, {
     statusCode: 200,
     success: true,
-    message: "User Created successfully",
+    message: "Admin Created successfully",
     data: result,
   });
 });
@@ -23,46 +23,50 @@ const getAllUsers = catchAsync(async (req: Request, res: Response) => {
   const options = pick(req?.query, pageAndSortConstants);
   const result = await adminServices.getAllUsersFromDB(filter, options);
   //Send Response
-  return sendResponse(res, {
-    statusCode: 200,
+  return res.status(200).json({
     success: true,
-    message: "User reterived successfully",
-    data: result,
+    message: "Admin Reterive successfully",
+    meta: result?.meta,
+    data: result?.data,
   });
 });
 
 //Get Single User
 const getSingleUser = catchAsync(async (req: Request, res: Response) => {
-  const result = await adminServices.getSingleUsersFromDB(req?.params);
+  const { id } = req?.params;
+  const result = await adminServices.getSingleUsersFromDB(id);
   //Send Response
   return sendResponse(res, {
     statusCode: 200,
     success: true,
-    message: "User reterived successfully",
-    data: result,
-  });
-});
-
-//Delete User
-const deleteUser = catchAsync(async (req: Request, res: Response) => {
-  const result = await adminServices.deleteUserFromDB();
-  //Send Response
-  return sendResponse(res, {
-    statusCode: 200,
-    success: true,
-    message: "User Deleted successfully",
+    message: "Admin reterived successfully",
     data: result,
   });
 });
 
 //Update User
 const updateUser = catchAsync(async (req: Request, res: Response) => {
-  const result = await adminServices.updateUserFromDB();
+  const { id } = req.params;
+  const data = req.body;
+  const result = await adminServices.updateUserFromDB(id, data);
   //Send Response
   return sendResponse(res, {
     statusCode: 200,
     success: true,
-    message: "User Updated successfully",
+    message: "Admin Updated successfully",
+    data: result,
+  });
+});
+
+//Delete User
+const deleteUser = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const result = await adminServices.deleteUserFromDB(id);
+  //Send Response
+  return sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "Admin Deleted successfully",
     data: result,
   });
 });

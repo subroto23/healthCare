@@ -4,7 +4,7 @@ const router = express.Router();
 
 const routesAndPath = [
   {
-    path: "/users",
+    path: "/admins",
     route: adminRouter,
   },
 ];

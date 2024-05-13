@@ -9,6 +9,7 @@ type IReturnOptions = {
   sort: string;
   skip: number;
   sortOrder: string;
+  page: number;
 };
 const calculatePagination = (options: IOptions): IReturnOptions => {
   const page = Number(options?.page) || 1;
@@ -20,6 +21,7 @@ const calculatePagination = (options: IOptions): IReturnOptions => {
     limit,
     sort,
     skip,
+    page,
     sortOrder,
   };
 };
