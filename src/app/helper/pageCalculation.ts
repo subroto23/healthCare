@@ -1,8 +1,8 @@
 type IOptions = {
-  page: string;
-  limit: string;
-  sortBy: string;
-  sortOrder: string;
+  page?: string;
+  limit?: string;
+  sortBy?: string | undefined;
+  sortOrder?: string | undefined;
 };
 type IReturnOptions = {
   limit: number;

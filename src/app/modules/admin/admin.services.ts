@@ -2,6 +2,8 @@ import { Admin, Prisma, PrismaClient, UserStatus } from "@prisma/client";
 import bcrypt from "bcrypt";
 import { adminSearchAbleField } from "./admin.constant";
 import calculatePagination from "../../helper/pageCalculation";
+import { IFilterd } from "./admin.interface";
+import { IOptions } from "../../interfaces/globalInterfaces";
 
 const prisma = new PrismaClient();
 //Create Services
@@ -32,7 +34,8 @@ const createAdminIntoDB = async (payload: any) => {
 };
 
 //All Users Reterive
-const getAllUsersFromDB = async (filter: any, options: any) => {
+const getAllUsersFromDB = async (filter: IFilterd, options: IOptions) => {
+  console.log(options);
   const { search, ...filterData } = filter;
   const { skip, page, limit, sort, sortOrder } = calculatePagination(options);
   const andCondition: Prisma.AdminWhereInput[] = [];
@@ -56,7 +59,7 @@ const getAllUsersFromDB = async (filter: any, options: any) => {
     andCondition.push({
       AND: Object.keys(filterData).map((keys) => ({
         [keys]: {
-          equals: filterData[keys],
+          equals: (filterData as any)[keys],
         },
       })),
     });
@@ -105,14 +108,13 @@ const updateUserFromDB = async (id: string, data: Partial<Admin>) => {
   await prisma.admin.findUniqueOrThrow({
     where: {
       id,
-      isDeleted: false,
     },
   });
 
   const result = await prisma.admin.update({
     where: {
       id,
-      isDeleted: true,
+      isDeleted: false,
     },
     data,
   });
