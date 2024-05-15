@@ -1,4 +1,4 @@
-import { Admin, Prisma, PrismaClient, UserStatus } from "@prisma/client";
+import { Admin, Prisma, PrismaClient, User, UserStatus } from "@prisma/client";
 import bcrypt from "bcrypt";
 import { adminSearchAbleField } from "./admin.constant";
 import calculatePagination from "../../helper/pageCalculation";
@@ -14,6 +14,7 @@ const createAdminIntoDB = async (payload: any) => {
   //User Data seperation
   const userData = {
     email: payload.admin.email,
+    role: payload?.role,
     password: hashPassword,
   };
 
@@ -35,7 +36,6 @@ const createAdminIntoDB = async (payload: any) => {
 
 //All Users Reterive
 const getAllUsersFromDB = async (filter: IFilterd, options: IOptions) => {
-  console.log(options);
   const { search, ...filterData } = filter;
   const { skip, page, limit, sort, sortOrder } = calculatePagination(options);
   const andCondition: Prisma.AdminWhereInput[] = [];

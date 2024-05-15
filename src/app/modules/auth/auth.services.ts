@@ -1,9 +1,9 @@
-import jwt, { JwtPayload } from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { prisma } from "../../constants/globalConstant";
 import { ILogin } from "./auth.interface";
-import generateToken from "../../helper/generateToken";
 import config from "../../config";
+import { authTokenServices } from "../../helper/authToken";
+import ApiError from "../../errors/apiError";
 
 const loging = async (payload: ILogin) => {
   const { email, password } = payload;
@@ -22,7 +22,7 @@ const loging = async (payload: ILogin) => {
     userData?.password
   );
   if (!isPassworMatch) {
-    throw new Error("Password not match.Please try again later");
+    throw new ApiError(404, "Password not match.Please try again later");
   }
 
   //Create access token
@@ -30,17 +30,17 @@ const loging = async (payload: ILogin) => {
     email: userData.email,
     role: userData.role,
   };
-  const accessToken = await generateToken(
+  const accessToken = await authTokenServices.generateToken(
     tokenValue,
     config.accessTokenSecrete as string,
     config.accessTokenExpire as string
   );
   if (!accessToken) {
-    throw new Error("Your login credentials expired");
+    throw new ApiError(403, "Your login credentials expired");
   }
 
   //Generate Refresh Token
-  const refreshToken = await generateToken(
+  const refreshToken = await authTokenServices.generateToken(
     tokenValue,
     config.refreshTokenSecrete as string,
     config.refreshTokenExpire as string
@@ -56,10 +56,10 @@ const loging = async (payload: ILogin) => {
 //Generate Refresh Token When accessToken Expired
 const refreshToken = async (token: string) => {
   //Verify token validaty
-  const userData = (await jwt.verify(
+  const userData = await authTokenServices.verifyToken(
     token,
     config.refreshTokenSecrete as string
-  )) as JwtPayload;
+  );
 
   //Refresh Token CHecking valid or not
   const isExistUser = await prisma.user.findUniqueOrThrow({
@@ -74,7 +74,7 @@ const refreshToken = async (token: string) => {
     email: userData.email,
     role: userData.role,
   };
-  const accessToken = await generateToken(
+  const accessToken = await authTokenServices.generateToken(
     tokenValue,
     config.accessTokenSecrete as string,
     config.accessTokenExpire as string
