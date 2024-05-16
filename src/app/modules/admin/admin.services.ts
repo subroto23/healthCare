@@ -4,10 +4,21 @@ import { adminSearchAbleField } from "./admin.constant";
 import calculatePagination from "../../helper/pageCalculation";
 import { IFilterd } from "./admin.interface";
 import { IOptions } from "../../interface/globalInterfaces";
+import { fileUploader } from "../../shared/fileUploader";
 
 const prisma = new PrismaClient();
 //Create Services
-const createAdminIntoDB = async (payload: any) => {
+const createAdminIntoDB = async (file: any, payload: any) => {
+  const filePath = file?.path;
+  const fileName = payload.admin.email;
+  if (file) {
+    const userPhoto: any = await fileUploader.sendToCloudenary(
+      filePath,
+      fileName
+    );
+    payload.admin.profilePhoto = userPhoto.secure_url;
+  }
+
   //Hashing Password
   const hashPassword: string = await bcrypt.hash(payload.password, 12);
 

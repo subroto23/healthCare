@@ -8,7 +8,9 @@ import { pageAndSortConstants } from "../../constants/globalConstant";
 import httpStatus from "http-status";
 
 const createUser = catchAsync(async (req: Request, res: Response) => {
-  const result = await adminServices.createAdminIntoDB(req.body);
+  const file = req.file;
+  const data = req.body;
+  const result = await adminServices.createAdminIntoDB(file, data);
   //Send Response
   return sendResponse(res, {
     statusCode: httpStatus.OK,

@@ -4,10 +4,13 @@ import validateRequest from "../../middleware/ValidatorRequest";
 import { validationSchema } from "./admin.validation";
 import { UserRole } from "@prisma/client";
 import authGuard from "../../middleware/authGuard";
+import { fileUploader } from "../../shared/fileUploader";
 const routes = express.Router();
 
 routes.post(
   "/create-admin",
+  fileUploader.upload.single("file"),
+  fileUploader.fileAndDataParser,
   authGuard(UserRole.ADMIN, UserRole.SUPER_ADMIN),
   userController.createUser
 );
