@@ -4,8 +4,9 @@ import { IChangePassword, ILogin } from "./auth.interface";
 import config from "../../config";
 import { authTokenServices } from "../../helper/authToken";
 import ApiError from "../../errors/apiError";
-import { JwtPayload } from "jsonwebtoken";
+import { JwtPayload, Secret } from "jsonwebtoken";
 import httpStatus from "http-status";
+import sendEmail from "../../utls/sendEmail";
 
 const loging = async (payload: ILogin) => {
   const { email, password } = payload;
@@ -87,8 +88,8 @@ const refreshToken = async (token: string) => {
   };
   return result;
 };
-//Change Password
 
+//Change Password
 const changePassword = async (user: JwtPayload, payload: IChangePassword) => {
   const { oldPassword, newPassword } = payload;
   //Checking Email Exist or not
@@ -107,7 +108,7 @@ const changePassword = async (user: JwtPayload, payload: IChangePassword) => {
     userData?.password
   );
   if (!isPassworMatch) {
-    throw new ApiError(404, "Password not match.Please try again later");
+    throw new ApiError(404, "Password not match.");
   }
 
   //Hashing Password
@@ -116,11 +117,11 @@ const changePassword = async (user: JwtPayload, payload: IChangePassword) => {
     where: {
       email: user.email,
       status: "ACTIVE",
-      needPasswordChange: false,
+      needPasswordChange: true,
     },
     data: {
       password: hashPassword,
-      needPasswordChange: true,
+      needPasswordChange: false,
     },
   });
   return {
@@ -128,8 +129,89 @@ const changePassword = async (user: JwtPayload, payload: IChangePassword) => {
   };
 };
 
+//Forgotten Password
+const forgottenPassword = async (userEmail: string) => {
+  //Checking Email Exist or not
+  const userData = await prisma.user.findUniqueOrThrow({
+    where: {
+      email: userEmail,
+      status: "ACTIVE",
+    },
+  });
+  //Create access token
+  const tokenValue = {
+    email: userData.email,
+    role: userData.role,
+  };
+  const resetToken = await authTokenServices.generateToken(
+    tokenValue,
+    config.resetTokenSecret as Secret,
+    config.resetTokenExpire as string
+  );
+  if (!resetToken) {
+    throw new ApiError(403, "Your login credentials expired");
+  }
+  //Reset Link Creation
+  const resetLink = `${config.frontendUrl}/api/v1/auth/reset-password?user=${userData.id}&token=${resetToken}`;
+  const html = `
+     <div>
+      <p>Reset Your Password</p>
+        <p>
+          <a href=${resetLink}>Reset Your Password</a>
+       </p>
+    </div>
+  `;
+  //send Email
+  await sendEmail(userData?.email, html);
+  //
+  return {
+    message: "Please Check Your Email",
+  };
+};
+
+//Reset Password
+const resetPassword = async (
+  token: string,
+  payload: { password: string; id: string }
+) => {
+  //Verify token validaty
+  const userData = await authTokenServices.verifyToken(
+    token,
+    config.resetTokenSecret as string
+  );
+  //Checking User Exist or not
+  const isExistsUser = await prisma.user.findUniqueOrThrow({
+    where: {
+      email: userData.email,
+      id: payload.id,
+      status: "ACTIVE",
+    },
+  });
+  if (!isExistsUser) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, "User not found");
+  }
+  //Hashing Password
+  const hashPassword: string = await bcrypt.hash(payload.password, 12);
+
+  //update Password
+  await prisma.user.update({
+    where: {
+      email: isExistsUser.email,
+      id: isExistsUser.id,
+    },
+    data: {
+      password: hashPassword,
+    },
+  });
+  return {
+    message: "Password Reset Successfully",
+  };
+};
+
 export const authServices = {
   loging,
   refreshToken,
   changePassword,
+  forgottenPassword,
+  resetPassword,
 };
