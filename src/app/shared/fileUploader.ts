@@ -31,11 +31,11 @@ const sendToCloudenary = (filePath: string, fileName: string) => {
       filePath,
       { public_id: fileName },
       (error, result) => {
+        fs.unlinkSync(filePath);
         if (error) {
           reject(error);
         } else {
           resolve(result);
-          fs.unlinkSync(filePath);
         }
       }
     );

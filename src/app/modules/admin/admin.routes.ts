@@ -1,7 +1,7 @@
 import express from "express";
 import { userController } from "./admin.controller";
 import validateRequest from "../../middleware/ValidatorRequest";
-import { validationSchema } from "./admin.validation";
+import { adminValidationSchema } from "./admin.validation";
 import { UserRole } from "@prisma/client";
 import authGuard from "../../middleware/authGuard";
 import { fileUploader } from "../../shared/fileUploader";
@@ -12,6 +12,7 @@ routes.post(
   fileUploader.upload.single("file"),
   fileUploader.fileAndDataParser,
   authGuard(UserRole.ADMIN, UserRole.SUPER_ADMIN),
+  validateRequest(adminValidationSchema.createValidationSchema),
   userController.createUser
 );
 routes.get(
@@ -32,7 +33,7 @@ routes.delete(
 routes.patch(
   "/:id",
   authGuard(UserRole.ADMIN, UserRole.SUPER_ADMIN),
-  validateRequest(validationSchema.updateValidationSchema),
+  validateRequest(adminValidationSchema.updateValidationSchema),
   userController.updateUser
 );
 
