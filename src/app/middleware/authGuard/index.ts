@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import catchAsync from "../../utls/CatchAsync";
 import { authTokenServices } from "../../helper/authToken";
-import { Secret } from "jsonwebtoken";
+import { JwtPayload, Secret } from "jsonwebtoken";
 import config from "../../config";
 import ApiError from "../../errors/apiError";
 
@@ -18,6 +18,7 @@ const authGuard = (...roles: string[]) => {
     if (roles.length > 0 && !roles.includes(userData.role)) {
       throw new ApiError(402, "You are not authorized user");
     }
+    req.user = userData;
     next();
   });
 };

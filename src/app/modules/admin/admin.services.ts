@@ -3,7 +3,7 @@ import bcrypt from "bcrypt";
 import { adminSearchAbleField } from "./admin.constant";
 import calculatePagination from "../../helper/pageCalculation";
 import { IFilterd } from "./admin.interface";
-import { IOptions } from "../../interfaces/globalInterfaces";
+import { IOptions } from "../../interface/globalInterfaces";
 
 const prisma = new PrismaClient();
 //Create Services
