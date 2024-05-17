@@ -42,6 +42,7 @@ model User {
   updatedAt          DateTime   @updatedAt
   admin              Admin?
   Doctor             Doctor?
+  Patient            Patient?
 
   @@map("users")
 }
@@ -82,4 +83,19 @@ model Doctor {
   user                User     @relation(fields: [email], references: [email])
 
   @@map("doctors")
+}
+
+model Patient {
+  id            String   @unique @default(uuid())
+  name          String
+  email         String   @unique
+  profilePhoto  String?
+  contactNumber String
+  address       String
+  isDeleted     Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  user          User     @relation(fields: [email], references: [email])
+
+  @@map("patients")
 }
