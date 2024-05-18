@@ -1,5 +1,4 @@
 import express from "express";
-import { fileUploader } from "../../shared/fileUploader";
 import authGuard from "../../middleware/authGuard";
 import validateRequest from "../../middleware/ValidatorRequest";
 import { patientValidationSchema } from "./patient.validation";
@@ -7,13 +6,6 @@ import { patientController } from "./patient.controller";
 import { UserRole } from "@prisma/client";
 const routes = express.Router();
 
-routes.post(
-  "/create-patient",
-  fileUploader.upload.single("file"),
-  fileUploader.fileAndDataParser,
-  validateRequest(patientValidationSchema.createPatientValidationSchema),
-  patientController.createPatient
-);
 routes.get(
   "/",
   authGuard(UserRole.ADMIN, UserRole.SUPER_ADMIN),

@@ -4,3 +4,10 @@ export type IOptions = {
   sortBy?: string | undefined;
   sortOrder?: string | undefined;
 };
+
+export type IAuthGurdUser = {
+  email: string;
+  role: string;
+  iat: number;
+  exp: number;
+};

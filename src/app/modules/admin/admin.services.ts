@@ -46,7 +46,7 @@ const createAdminIntoDB = async (file: any, payload: any) => {
 };
 
 //All Users Reterive
-const getAllUsersFromDB = async (filter: IFilterd, options: IOptions) => {
+const getAllAdminFromDB = async (filter: IFilterd, options: IOptions) => {
   const { search, ...filterData } = filter;
   const { skip, page, limit, sort, sortOrder } = calculatePagination(options);
   const andCondition: Prisma.AdminWhereInput[] = [];
@@ -103,7 +103,7 @@ const getAllUsersFromDB = async (filter: IFilterd, options: IOptions) => {
 };
 
 //Single User Retrive
-const getSingleUsersFromDB = async (id: string) => {
+const getSingleAdminFromDB = async (id: string) => {
   const result = await prisma.admin.findUniqueOrThrow({
     where: {
       id,
@@ -114,7 +114,7 @@ const getSingleUsersFromDB = async (id: string) => {
 };
 
 //Update User From DB
-const updateUserFromDB = async (id: string, data: Partial<Admin>) => {
+const updateAdminFromDB = async (id: string, data: Partial<Admin>) => {
   //Is exist checking
   await prisma.admin.findUniqueOrThrow({
     where: {
@@ -133,7 +133,7 @@ const updateUserFromDB = async (id: string, data: Partial<Admin>) => {
 };
 
 //Delete User from DB
-const deleteUserFromDB = async (id: string) => {
+const deleteAdminFromDB = async (id: string) => {
   const result = await prisma.$transaction(async (tranjection) => {
     await prisma.admin.findUniqueOrThrow({
       where: {
@@ -164,8 +164,8 @@ const deleteUserFromDB = async (id: string) => {
 
 export const adminServices = {
   createAdminIntoDB,
-  getAllUsersFromDB,
-  getSingleUsersFromDB,
-  deleteUserFromDB,
-  updateUserFromDB,
+  getAllAdminFromDB,
+  getSingleAdminFromDB,
+  deleteAdminFromDB,
+  updateAdminFromDB,
 };

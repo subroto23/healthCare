@@ -7,7 +7,7 @@ import { adminFilterdFields } from "./admin.constant";
 import { pageAndSortConstants } from "../../constants/globalConstant";
 import httpStatus from "http-status";
 
-const createUser = catchAsync(async (req: Request, res: Response) => {
+const createAdmin = catchAsync(async (req: Request, res: Response) => {
   const file = req.file;
   const data = req.body;
   const result = await adminServices.createAdminIntoDB(file, data);
@@ -21,10 +21,10 @@ const createUser = catchAsync(async (req: Request, res: Response) => {
 });
 
 //Getting All Users
-const getAllUsers = catchAsync(async (req: Request, res: Response) => {
+const getAllAdmin = catchAsync(async (req: Request, res: Response) => {
   const filter = pick(req?.query, adminFilterdFields);
   const options = pick(req?.query, pageAndSortConstants);
-  const result = await adminServices.getAllUsersFromDB(filter, options);
+  const result = await adminServices.getAllAdminFromDB(filter, options);
   //Send Response
   //Send Response
   return sendResponse(res, {
@@ -37,9 +37,9 @@ const getAllUsers = catchAsync(async (req: Request, res: Response) => {
 });
 
 //Get Single User
-const getSingleUser = catchAsync(async (req: Request, res: Response) => {
+const getSingleAdmin = catchAsync(async (req: Request, res: Response) => {
   const { id } = req?.params;
-  const result = await adminServices.getSingleUsersFromDB(id);
+  const result = await adminServices.getSingleAdminFromDB(id);
   //Send Response
   return sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -50,10 +50,10 @@ const getSingleUser = catchAsync(async (req: Request, res: Response) => {
 });
 
 //Update User
-const updateUser = catchAsync(async (req: Request, res: Response) => {
+const updateAdmin = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
   const data = req.body;
-  const result = await adminServices.updateUserFromDB(id, data);
+  const result = await adminServices.updateAdminFromDB(id, data);
   //Send Response
   return sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -64,9 +64,9 @@ const updateUser = catchAsync(async (req: Request, res: Response) => {
 });
 
 //Delete User
-const deleteUser = catchAsync(async (req: Request, res: Response) => {
+const deleteAdmin = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
-  const result = await adminServices.deleteUserFromDB(id);
+  const result = await adminServices.deleteAdminFromDB(id);
   //Send Response
   return sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -76,10 +76,10 @@ const deleteUser = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-export const userController = {
-  createUser,
-  getAllUsers,
-  getSingleUser,
-  deleteUser,
-  updateUser,
+export const adminController = {
+  createAdmin,
+  getAllAdmin,
+  getSingleAdmin,
+  deleteAdmin,
+  updateAdmin,
 };
