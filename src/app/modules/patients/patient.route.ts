@@ -29,7 +29,6 @@ routes.delete(
 routes.patch(
   "/:id",
   authGuard(UserRole.PATIENT),
-  validateRequest(patientValidationSchema.updatePatientValidationSchema),
   patientController.updatePatient
 );
 

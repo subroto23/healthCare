@@ -1,16 +1,10 @@
-import {
-  Admin,
-  Doctor,
-  Prisma,
-  PrismaClient,
-  UserStatus,
-} from "@prisma/client";
+import { Doctor, Prisma, UserStatus } from "@prisma/client";
 import bcrypt from "bcrypt";
 import { fileUploader } from "../../shared/fileUploader";
 import { prisma } from "../../constants/globalConstant";
 import { IOptions } from "../../interface/globalInterfaces";
 import calculatePagination from "../../helper/pageCalculation";
-import { adminSearchAbleField } from "../admin/admin.constant";
+import { doctorSearchAbleField } from "./doctors.constants";
 
 //Create Services
 const createDoctorIntoDB = async (file: any, payload: any) => {
@@ -49,16 +43,16 @@ const createDoctorIntoDB = async (file: any, payload: any) => {
   return result;
 };
 
-//All Users Reterive
+//All Doctors Reterive
 const getAllDoctorFromDB = async (filter: any, options: IOptions) => {
-  const { search, ...filterData } = filter;
+  const { search, specialties, ...filterData } = filter;
   const { skip, page, limit, sort, sortOrder } = calculatePagination(options);
-  const andCondition: Prisma.AdminWhereInput[] = [];
+  const andCondition: Prisma.DoctorWhereInput[] = [];
 
   //Search Conditon Query
   if (filter.search) {
     andCondition.push({
-      OR: adminSearchAbleField.map((field) => {
+      OR: doctorSearchAbleField.map((field) => {
         return {
           [field]: {
             contains: filter?.search,
@@ -83,6 +77,20 @@ const getAllDoctorFromDB = async (filter: any, options: IOptions) => {
   andCondition.push({
     isDeleted: false,
   });
+  if (specialties && specialties.length > 0) {
+    andCondition.push({
+      doctorSpecialties: {
+        some: {
+          specialty: {
+            title: {
+              contains: specialties,
+              mode: "insensitive",
+            },
+          },
+        },
+      },
+    });
+  }
 
   const whereCondition: any = { AND: andCondition };
   const result = await prisma.doctor.findMany({
@@ -91,6 +99,9 @@ const getAllDoctorFromDB = async (filter: any, options: IOptions) => {
     take: limit,
     orderBy: {
       [sort]: sortOrder,
+    },
+    include: {
+      doctorSpecialties: true,
     },
   });
   const total = await prisma.doctor.count({
@@ -106,7 +117,7 @@ const getAllDoctorFromDB = async (filter: any, options: IOptions) => {
   };
 };
 
-//Single User Retrive
+//Single Doctor Retrive
 const getSingleDoctorFromDB = async (id: string) => {
   const result = await prisma.doctor.findUniqueOrThrow({
     where: {
@@ -117,7 +128,7 @@ const getSingleDoctorFromDB = async (id: string) => {
   return result;
 };
 
-//Update User From DB
+//Update Doctor From DB
 const updateDoctorFromDB = async (
   id: string,
   specialities: any,

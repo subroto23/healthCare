@@ -1,3 +1,9 @@
+export const doctorSearchAbleField: string[] = [
+  "name",
+  "address",
+  "contactNumber",
+  "designation",
+];
 export const doctorFiltedField: string[] = [
   "name",
   "email",
@@ -9,4 +15,5 @@ export const doctorFiltedField: string[] = [
   "currentWorkingPlace",
   "designation",
   "averageRating",
+  "specialties",
 ];
