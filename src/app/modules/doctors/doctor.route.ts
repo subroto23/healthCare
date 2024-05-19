@@ -23,8 +23,7 @@ routes.delete(
 );
 routes.patch(
   "/:id",
-  authGuard(UserRole.ADMIN, UserRole.SUPER_ADMIN),
-  validateRequest(doctorsValidationSchema.updateDoctorsSchema),
+  authGuard(UserRole.ADMIN, UserRole.SUPER_ADMIN, UserRole.DOCTOR),
   doctorController.updateDoctor
 );
 

@@ -118,20 +118,69 @@ const getSingleDoctorFromDB = async (id: string) => {
 };
 
 //Update User From DB
-const updateDoctorFromDB = async (id: string, data: Partial<Doctor>) => {
+const updateDoctorFromDB = async (
+  id: string,
+  specialities: any,
+  data: Partial<Doctor>
+) => {
   //Is exist checking
-  await prisma.admin.findUniqueOrThrow({
+  const userInfo = await prisma.doctor.findUniqueOrThrow({
     where: {
       id,
     },
   });
 
-  const result = await prisma.admin.update({
+  //When doctor updated Specialty then create doctorSpeciality Table
+  await prisma.$transaction(async (tx) => {
+    const doctorUpdatedInfo = await tx.doctor.update({
+      where: {
+        id,
+        isDeleted: false,
+      },
+      data,
+      include: {
+        doctorSpecialties: true,
+      },
+    });
+    if (specialities && specialities.length > 0) {
+      //Delete Specialities from Doctor
+      const deletedSpecialists = specialities.filter(
+        (aryObj: any) => aryObj.isDeleted === true
+      );
+
+      for (const spData of deletedSpecialists) {
+        await tx.doctorSpecialties.deleteMany({
+          where: {
+            doctorId: doctorUpdatedInfo.id,
+            specialitiesId: spData.specialistId,
+          },
+        });
+      }
+      //Create Specialities
+      //Delete Specialities from Doctor
+      const createSpecialists = specialities.filter(
+        (aryObj: any) => aryObj.isDeleted === false
+      );
+
+      for (const spData of createSpecialists) {
+        await tx.doctorSpecialties.create({
+          data: {
+            doctorId: doctorUpdatedInfo.id,
+            specialitiesId: spData.specialistId,
+          },
+        });
+      }
+    }
+
+    return doctorUpdatedInfo;
+  });
+  const result = await prisma.doctor.findUnique({
     where: {
-      id,
-      isDeleted: false,
+      id: userInfo.id,
     },
-    data,
+    include: {
+      doctorSpecialties: true,
+    },
   });
   return result;
 };

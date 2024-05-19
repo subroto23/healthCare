@@ -51,8 +51,12 @@ const getSingleDoctor = catchAsync(async (req: Request, res: Response) => {
 //Update User
 const updateDoctor = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
-  const data = req.body;
-  const result = await doctorServices.updateDoctorFromDB(id, data);
+  const { specialities, ...data } = req.body;
+  const result = await doctorServices.updateDoctorFromDB(
+    id,
+    specialities,
+    data
+  );
   //Send Response
   return sendResponse(res, {
     statusCode: httpStatus.OK,
