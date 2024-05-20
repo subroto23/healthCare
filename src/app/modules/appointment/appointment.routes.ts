@@ -21,19 +21,10 @@ routes.get(
   authGuard(UserRole.PATIENT, UserRole.DOCTOR),
   appoinmentController.getMyAppoinment
 );
-routes.get(
-  "/:id",
-  authGuard(UserRole.ADMIN, UserRole.SUPER_ADMIN),
-  appoinmentController.getSingleAppointment
-);
-routes.delete(
-  "/:id",
-  authGuard(UserRole.ADMIN, UserRole.SUPER_ADMIN),
-  appoinmentController.deleteAppointment
-);
+
 routes.patch(
-  "/:id",
-  authGuard(UserRole.ADMIN, UserRole.SUPER_ADMIN),
+  "/status/:id",
+  authGuard(UserRole.ADMIN, UserRole.SUPER_ADMIN, UserRole.DOCTOR),
   appoinmentController.updateAppointment
 );
 

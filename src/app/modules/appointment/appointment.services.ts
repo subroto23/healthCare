@@ -5,7 +5,14 @@ import { v4 as uuidv4 } from "uuid";
 import ApiError from "../../errors/apiError";
 import httpStatus from "http-status";
 import calculatePagination from "../../helper/pageCalculation";
-import { Prisma, UserRole } from "@prisma/client";
+import {
+  Appointment,
+  AppointmentStatus,
+  PaymentStatus,
+  Prisma,
+  UserRole,
+} from "@prisma/client";
+import { appointmentDeletedAfter } from "./appointment.constant";
 
 const createAppoinmentInotDB = async (
   user: JwtPayload,
@@ -223,20 +230,92 @@ const getAllAppoinment = async (
   };
 };
 
-//Single Appontments Get
-const getSingleAppointmentFromDB = async () => {};
-
 //Update Appontments
-const updateAppointmentFromDB = async () => {};
+const updateAppointmentStatusFromDB = async (
+  user: JwtPayload,
+  appointmentId: string,
+  payload: Partial<Appointment>
+) => {
+  const appointmentInfo = await prisma.appointment.findUniqueOrThrow({
+    where: {
+      id: appointmentId,
+    },
+    include: {
+      doctor: true,
+    },
+  });
 
-//Delete Appointment
-const deleteAppointmentFromDB = async () => {};
+  //Doctor Appointments Check
+  if (user.role === UserRole.DOCTOR) {
+    if (appointmentInfo.doctor.email !== user.email) {
+      throw new ApiError(
+        httpStatus.BAD_REQUEST,
+        "This Appointment is not yours"
+      );
+    }
+  }
+
+  const result = await prisma.appointment.update({
+    where: {
+      id: appointmentId,
+    },
+    data: {
+      status: payload.status,
+    },
+  });
+  return result;
+};
+
+//Unpaid Status Deleted Autometicly
+const unPaidAppointmentDeleted = async () => {
+  const createdAfterTimeAgo = new Date(
+    Date.now() - appointmentDeletedAfter * 60 * 1000
+  );
+  const upPaidAppointmentsInfo = await prisma.appointment.findMany({
+    where: {
+      paymentStatus: PaymentStatus.UNPAID,
+      createdAt: {
+        lt: createdAfterTimeAgo,
+      },
+    },
+  });
+  const unPaidIds = upPaidAppointmentsInfo.map((appointment) => appointment.id);
+
+  const result = await prisma.$transaction(async (tx) => {
+    //Delete appointment from Payment Table
+    await tx.payment.deleteMany({
+      where: {
+        appointtmentId: {
+          in: unPaidIds,
+        },
+      },
+    });
+    //Delete Appoinments From Appointments Table
+    await tx.appointment.deleteMany({
+      where: {
+        id: {
+          in: unPaidIds,
+        },
+      },
+    });
+
+    //Delete From doctor Table
+    for (const unPaidAppointmentData of upPaidAppointmentsInfo) {
+      await tx.doctorSchedules.deleteMany({
+        where: {
+          doctorId: unPaidAppointmentData.doctorId,
+          scheduleId: unPaidAppointmentData.scheduleId,
+        },
+      });
+    }
+  });
+  return result;
+};
 
 export const appoinmentServices = {
   createAppoinmentInotDB,
   getMyAppoinment,
-  getSingleAppointmentFromDB,
-  updateAppointmentFromDB,
-  deleteAppointmentFromDB,
+  updateAppointmentStatusFromDB,
   getAllAppoinment,
+  unPaidAppointmentDeleted,
 };

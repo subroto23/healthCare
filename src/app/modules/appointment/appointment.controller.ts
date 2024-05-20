@@ -61,42 +61,21 @@ const getAllApportment = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-//Get Single Appointments
-const getSingleAppointment = catchAsync(async (req: Request, res: Response) => {
-  const { id } = req?.params;
-  const result = await appoinmentServices.getSingleAppointmentFromDB();
-  //Send Response
-  return sendResponse(res, {
-    statusCode: httpStatus.OK,
-    success: true,
-    message: "Appointment reterived successfully",
-    data: result,
-  });
-});
-
-//Update User
+//Appointment Status Update
 const updateAppointment = catchAsync(async (req: Request, res: Response) => {
+  const user = req.user as JwtPayload;
   const { id } = req.params;
-  const data = req.body;
-  const result = await appoinmentServices.updateAppointmentFromDB();
-  //Send Response
-  return sendResponse(res, {
-    statusCode: httpStatus.OK,
-    success: true,
-    message: "Appointment Updated successfully",
-    data: result,
-  });
-});
 
-//Delete User
-const deleteAppointment = catchAsync(async (req: Request, res: Response) => {
-  const { id } = req.params;
-  const result = await appoinmentServices.deleteAppointmentFromDB();
+  const result = await appoinmentServices.updateAppointmentStatusFromDB(
+    user,
+    id,
+    req.body
+  );
   //Send Response
   return sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: "Appointment Deleted successfully",
+    message: "Appointment Status Updated successfully",
     data: result,
   });
 });
@@ -105,7 +84,5 @@ export const appoinmentController = {
   createAppointment,
   getMyAppoinment,
   getAllApportment,
-  getSingleAppointment,
-  deleteAppointment,
   updateAppointment,
 };
