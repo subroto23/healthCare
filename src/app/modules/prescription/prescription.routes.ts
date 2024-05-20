@@ -15,4 +15,16 @@ routes.get(
   prescriptionController.getMyPrescription
 );
 
+routes.get(
+  "/",
+  authGuard(UserRole.SUPER_ADMIN, UserRole.ADMIN),
+  prescriptionController.getAllPrescriptions
+);
+
+routes.get(
+  "/:id",
+  authGuard(UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.PATIENT),
+  prescriptionController.getSinglePrescriptions
+);
+
 export const prescriptionRoutes = routes;

@@ -77,7 +77,54 @@ const getmyPrescription = async (user: JwtPayload, options: IOptions) => {
   };
 };
 
+//Get all Prescriptions
+const getAllPresCriptions = async (user: JwtPayload, options: IOptions) => {
+  const { skip, page, limit, sort, sortOrder } = calculatePagination(options);
+
+  //Checking Admin Info
+  await prisma.admin.findUniqueOrThrow({
+    where: {
+      email: user.email,
+    },
+  });
+
+  const result = await prisma.prescription.findMany({
+    skip,
+    take: limit,
+    orderBy: {
+      [sort]: sortOrder,
+    },
+  });
+
+  const total = await prisma.prescription.count();
+
+  return {
+    meta: {
+      page,
+      limit,
+      total,
+    },
+    data: result,
+  };
+};
+
+//Get all Prescriptions
+const getSinglePresCriptions = async (id: string) => {
+  const result = await prisma.prescription.findUniqueOrThrow({
+    where: {
+      id,
+    },
+    include: {
+      doctor: true,
+    },
+  });
+
+  return result;
+};
+
 export const prescriptionServices = {
   createPrescriptionIntoDB,
   getmyPrescription,
+  getAllPresCriptions,
+  getSinglePresCriptions,
 };

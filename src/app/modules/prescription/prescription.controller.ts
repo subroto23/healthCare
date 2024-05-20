@@ -39,7 +39,40 @@ const getMyPrescription = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+//get All Prescription
+const getAllPrescriptions = catchAsync(async (req: Request, res: Response) => {
+  const user = req.user as JwtPayload;
+  const options = pick(req?.query, pageAndSortConstants);
+  const result = await prescriptionServices.getAllPresCriptions(user, options);
+  //Send Response
+  return sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Prescription retrived successfully",
+    meta: result?.meta,
+    data: result?.data,
+  });
+});
+
+//get Single Prescription
+const getSinglePrescriptions = catchAsync(
+  async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const result = await prescriptionServices.getSinglePresCriptions(id);
+
+    //Send Response
+    return sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "Prescription retrived successfully",
+      data: result,
+    });
+  }
+);
+
 export const prescriptionController = {
   createPrescription,
   getMyPrescription,
+  getAllPrescriptions,
+  getSinglePrescriptions,
 };
