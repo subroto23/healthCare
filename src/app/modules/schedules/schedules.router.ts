@@ -14,4 +14,7 @@ routes.post(
   scheduleController.createSchedule
 );
 
+//Get ALl Schedule
+routes.get("/", authGuard(UserRole.DOCTOR), scheduleController.getAllSchedule);
+
 export const scheduleRoutes = routes;
