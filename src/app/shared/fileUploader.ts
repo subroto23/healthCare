@@ -3,6 +3,7 @@ import multer from "multer";
 import path from "path";
 import { NextFunction, Request, Response } from "express";
 import fs from "fs";
+import config from "../config";
 
 //Multer Configurations
 const storage = multer.diskStorage({
@@ -20,9 +21,9 @@ const upload = multer({ storage: storage });
 
 //Cloudinary Uploade Configurations
 cloudinary.config({
-  cloud_name: "dkwosk351",
-  api_key: "224489639686842",
-  api_secret: "gbf8EXEC7CzF46IgtToeW0EOgYo",
+  cloud_name: config.fileUpload.cloudName,
+  api_key: config.fileUpload.apiKey,
+  api_secret: config.fileUpload.apiSecret,
 });
 //Upload
 const sendToCloudenary = (filePath: string, fileName: string) => {

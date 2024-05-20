@@ -67,7 +67,7 @@ const createAppoinmentInotDB = async (
         appointmentId: appoinmentData.id,
       },
     });
-    const transactionId = `health-care-${new Date()}-${userInfo.id}`;
+    const transactionId = `health-care-${uuidv4()}`;
     await tx.payment.create({
       data: {
         appointtmentId: appoinmentData.id,
