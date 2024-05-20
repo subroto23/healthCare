@@ -1,7 +1,5 @@
 import express from "express";
 import authGuard from "../../middleware/authGuard";
-import validateRequest from "../../middleware/ValidatorRequest";
-import { patientValidationSchema } from "./patient.validation";
 import { patientController } from "./patient.controller";
 import { UserRole } from "@prisma/client";
 const routes = express.Router();
