@@ -5,6 +5,7 @@ import calculatePagination from "../../helper/pageCalculation";
 import { IFilterd } from "./admin.interface";
 import { IOptions } from "../../interface/globalInterfaces";
 import { fileUploader } from "../../shared/fileUploader";
+import ApiError from "../../errors/apiError";
 
 const prisma = new PrismaClient();
 //Create Services
@@ -18,6 +19,10 @@ const createAdminIntoDB = async (file: any, payload: any) => {
     );
     payload.admin.profilePhoto = userPhoto.secure_url;
   }
+  //Default Password Set
+  if (!payload.password) {
+    payload.password = "123456";
+  }
 
   //Hashing Password
   const hashPassword: string = await bcrypt.hash(payload.password, 12);
@@ -25,7 +30,6 @@ const createAdminIntoDB = async (file: any, payload: any) => {
   //User Data seperation
   const userData = {
     email: payload.admin.email,
-    role: payload?.role,
     password: hashPassword,
   };
 
