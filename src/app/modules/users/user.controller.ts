@@ -35,7 +35,23 @@ const updateMyProfile = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+//User Role Change
+const userRoleChange = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const data = req.body;
+  const result = await userServices.userRoleChange(id, data);
+
+  //Send Response
+  return sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "User Role Updated successfully",
+    data: result,
+  });
+});
+
 export const userController = {
   getMyProfile,
   updateMyProfile,
+  userRoleChange,
 };

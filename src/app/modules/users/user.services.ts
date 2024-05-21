@@ -1,6 +1,6 @@
 import { JwtPayload } from "jsonwebtoken";
 import { prisma } from "../../constants/globalConstant";
-import { UserRole, UserStatus } from "@prisma/client";
+import { User, UserRole, UserStatus } from "@prisma/client";
 import { fileUploader } from "../../shared/fileUploader";
 
 const myProfileFromDB = async (user: JwtPayload) => {
@@ -103,7 +103,26 @@ const updateProfileFromDB = async (
   return { ...profileUpdatedInfo };
 };
 
+//User Role change modification
+const userRoleChange = async (id: string, payload: Partial<User>) => {
+  const userInfo = await prisma.user.findUniqueOrThrow({
+    where: {
+      id,
+    },
+  });
+  const result = await prisma.user.update({
+    where: {
+      id: userInfo.id,
+    },
+    data: {
+      role: payload.role,
+    },
+  });
+  return result;
+};
+
 export const userServices = {
   myProfileFromDB,
   updateProfileFromDB,
+  userRoleChange,
 };

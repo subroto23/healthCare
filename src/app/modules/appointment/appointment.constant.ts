@@ -3,4 +3,4 @@ export const appointmentFiltedableField: string[] = [
   "status",
 ];
 
-export const appointmentDeletedAfter: number = 15;
+export const appointmentDeletedAfter: number = 59;

@@ -238,7 +238,7 @@ model Appointment {
   review          Review?
   prescription    Prescription?
 
-  @@map("appoinment")
+  @@map("appoinments")
 }
 
 model Payment {

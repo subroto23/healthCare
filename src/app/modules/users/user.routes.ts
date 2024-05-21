@@ -61,4 +61,10 @@ routes.patch(
   userController.updateMyProfile
 );
 
+routes.patch(
+  "/status/:id",
+  authGuard(UserRole.ADMIN, UserRole.SUPER_ADMIN),
+  userController.userRoleChange
+);
+
 export const userRoutes = routes;
