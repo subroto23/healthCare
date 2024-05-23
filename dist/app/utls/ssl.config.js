@@ -18,13 +18,14 @@ const config_1 = __importDefault(require("../config"));
 const apiError_1 = __importDefault(require("../errors/apiError"));
 const http_status_1 = __importDefault(require("http-status"));
 const sslConfigiration = (payload) => __awaiter(void 0, void 0, void 0, function* () {
+    const { amount, tx, cusName, cusEmail, cusAdd1, cusPhone } = payload;
     try {
         const data = {
             store_id: config_1.default.payment.storeId,
             store_passwd: config_1.default.payment.storePassword,
-            total_amount: payload.amount,
+            total_amount: amount,
             currency: "BDT",
-            tran_id: payload.tx, // use unique tran_id for each api call
+            tran_id: tx, // use unique tran_id for each api call
             success_url: config_1.default.payment.successUrl,
             fail_url: config_1.default.payment.failUrl,
             cancel_url: config_1.default.payment.cancelUrl,
@@ -33,15 +34,15 @@ const sslConfigiration = (payload) => __awaiter(void 0, void 0, void 0, function
             product_name: "Appointments",
             product_category: "Services",
             product_profile: "general",
-            cus_name: payload.cusName,
-            cus_email: payload.cusEmail,
-            cus_add1: payload.cusAdd1,
+            cus_name: cusName,
+            cus_email: cusEmail,
+            cus_add1: cusAdd1,
             cus_add2: "N/A",
             cus_city: "N/A",
             cus_state: "N/A",
             cus_postcode: "N/A",
             cus_country: "Bangladesh",
-            cus_phone: payload.cusPhone,
+            cus_phone: cusPhone,
             cus_fax: "N/A",
             ship_name: "N/A",
             ship_add1: "N/A",
@@ -52,14 +53,14 @@ const sslConfigiration = (payload) => __awaiter(void 0, void 0, void 0, function
             ship_country: "N/A",
         };
         const response = yield (0, axios_1.default)({
-            method: "POST",
-            url: config_1.default.payment.sessionApi,
-            data: data,
+            method: "post",
+            url: "https://sandbox.sslcommerz.com/gwprocess/v3/api.php",
+            data,
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded",
             },
         });
-        return response.data.GateWayPageURL;
+        return response.data.GatewayPageURL;
     }
     catch (error) {
         throw new apiError_1.default(http_status_1.default.BAD_REQUEST, "Payment Failed");
@@ -79,6 +80,6 @@ const validatePayements = (payload) => __awaiter(void 0, void 0, void 0, functio
     }
 });
 exports.sslInitializations = {
-    sslConfigiration,
     validatePayements,
+    sslConfigiration,
 };

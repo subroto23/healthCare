@@ -5,13 +5,14 @@ import httpStatus from "http-status";
 import { ISslInitialType } from "../modules/payments/payments.interface";
 
 const sslConfigiration = async (payload: ISslInitialType) => {
+  const { amount, tx, cusName, cusEmail, cusAdd1, cusPhone } = payload;
   try {
     const data = {
       store_id: config.payment.storeId,
       store_passwd: config.payment.storePassword,
-      total_amount: payload.amount,
+      total_amount: amount,
       currency: "BDT",
-      tran_id: payload.tx, // use unique tran_id for each api call
+      tran_id: tx, // use unique tran_id for each api call
       success_url: config.payment.successUrl,
       fail_url: config.payment.failUrl,
       cancel_url: config.payment.cancelUrl,
@@ -20,15 +21,15 @@ const sslConfigiration = async (payload: ISslInitialType) => {
       product_name: "Appointments",
       product_category: "Services",
       product_profile: "general",
-      cus_name: payload.cusName,
-      cus_email: payload.cusEmail,
-      cus_add1: payload.cusAdd1,
+      cus_name: cusName,
+      cus_email: cusEmail,
+      cus_add1: cusAdd1,
       cus_add2: "N/A",
       cus_city: "N/A",
       cus_state: "N/A",
       cus_postcode: "N/A",
       cus_country: "Bangladesh",
-      cus_phone: payload.cusPhone,
+      cus_phone: cusPhone,
       cus_fax: "N/A",
       ship_name: "N/A",
       ship_add1: "N/A",
@@ -39,14 +40,14 @@ const sslConfigiration = async (payload: ISslInitialType) => {
       ship_country: "N/A",
     };
     const response = await axios({
-      method: "POST",
-      url: config.payment.sessionApi,
-      data: data,
+      method: "post",
+      url: "https://sandbox.sslcommerz.com/gwprocess/v3/api.php",
+      data,
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
       },
     });
-    return response.data.GateWayPageURL;
+    return response.data.GatewayPageURL;
   } catch (error) {
     throw new ApiError(httpStatus.BAD_REQUEST, "Payment Failed");
   }
@@ -66,6 +67,6 @@ const validatePayements = async (payload: any) => {
 };
 
 export const sslInitializations = {
-  sslConfigiration,
   validatePayements,
+  sslConfigiration,
 };

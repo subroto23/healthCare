@@ -25,7 +25,7 @@ export default {
     sessionApi: process.env.SESSION_API,
     successUrl: process.env.SUCCESS_URL,
     failUrl: process.env.FAIL_URL,
-    cancelUrl: process.env.CANCEL_UR,
+    cancelUrl: process.env.CANCEL_URL,
     sslValidationApi: process.env.SSL_VALIDATION_API,
   },
 };

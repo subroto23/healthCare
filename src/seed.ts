@@ -2,7 +2,7 @@ import bcrypt from "bcrypt";
 import { UserRole } from "@prisma/client";
 import { prisma } from "../src/app/constants/globalConstant";
 
-const seedSuperAdmin = async () => {
+export const seedSuperAdmin = async () => {
   try {
     const isExist = await prisma.user.findFirst({
       where: {
@@ -35,4 +35,3 @@ const seedSuperAdmin = async () => {
     await prisma.$disconnect();
   }
 };
-seedSuperAdmin();
