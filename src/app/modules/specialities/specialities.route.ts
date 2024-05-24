@@ -9,12 +9,12 @@ const routes = express.Router();
 
 routes.get(
   "/",
-  authGuard(
-    UserRole.ADMIN,
-    UserRole.SUPER_ADMIN,
-    UserRole.PATIENT,
-    UserRole.DOCTOR
-  ),
+  // authGuard(
+  //   UserRole.ADMIN,
+  //   UserRole.SUPER_ADMIN,
+  //   UserRole.PATIENT,
+  //   UserRole.DOCTOR
+  // ),
   specialitiesController.getAllSpecialites
 );
 //Create

@@ -56,9 +56,10 @@ const sslConfigiration = async (payload: ISslInitialType) => {
 //Validation
 const validatePayements = async (payload: any) => {
   try {
+    const validationUrl = `${config.payment.sslValidationApi}?val_id=${payload.val_id}&store_id=${config.payment.storeId}&store_passwd=${config.payment.storePassword}&format=json`;
     const response = await axios({
       method: "GET",
-      url: `${config.payment.sslValidationApi}?val_id=${payload.val_id}&store_id=${config.payment.storeId}&store_passwd=${config.payment.storePassword}&format=json`,
+      url: validationUrl,
     });
     return response.data;
   } catch (error) {
