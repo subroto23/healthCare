@@ -14,5 +14,5 @@ const routes = express_1.default.Router();
 //Create Schedule
 routes.post("/create-schedule", (0, authGuard_1.default)(client_1.UserRole.ADMIN, client_1.UserRole.SUPER_ADMIN), (0, ValidatorRequest_1.default)(schedule_validation_1.schudeleValidation.createScheduleValidationSchema), schedules_controller_1.scheduleController.createSchedule);
 //Get ALl Schedule
-routes.get("/", (0, authGuard_1.default)(client_1.UserRole.DOCTOR), schedules_controller_1.scheduleController.getAllSchedule);
+routes.get("/", (0, authGuard_1.default)(client_1.UserRole.DOCTOR, client_1.UserRole.ADMIN, client_1.UserRole.SUPER_ADMIN), schedules_controller_1.scheduleController.getAllSchedule);
 exports.scheduleRoutes = routes;

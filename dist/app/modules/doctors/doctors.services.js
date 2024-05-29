@@ -44,6 +44,7 @@ const createDoctorIntoDB = (file, payload) => __awaiter(void 0, void 0, void 0, 
     const userData = {
         email: payload.doctor.email,
         password: hashPassword,
+        role: client_1.UserRole.DOCTOR,
     };
     //Transaction based creation usar and Admin
     const result = yield globalConstant_1.prisma.$transaction((tranjection) => __awaiter(void 0, void 0, void 0, function* () {

@@ -6,8 +6,12 @@ exports.doctorSearchAbleField = [
     "address",
     "contactNumber",
     "designation",
+    "email",
+    "experience",
+    "qualification",
 ];
 exports.doctorFiltedField = [
+    "search",
     "name",
     "email",
     "contactNumber",

@@ -41,7 +41,7 @@ const loging = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     };
     const accessToken = yield authToken_1.authTokenServices.generateToken(tokenValue, config_1.default.accessTokenSecrete, config_1.default.accessTokenExpire);
     if (!accessToken) {
-        throw new apiError_1.default(403, "Your login credentials expired");
+        throw new apiError_1.default(500, "Your login credentials expired");
     }
     //Generate Refresh Token
     const refreshToken = yield authToken_1.authTokenServices.generateToken(tokenValue, config_1.default.refreshTokenSecrete, config_1.default.refreshTokenExpire);

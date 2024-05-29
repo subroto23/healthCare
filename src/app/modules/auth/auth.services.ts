@@ -39,7 +39,7 @@ const loging = async (payload: ILogin) => {
     config.accessTokenExpire as string
   );
   if (!accessToken) {
-    throw new ApiError(403, "Your login credentials expired");
+    throw new ApiError(500, "Your login credentials expired");
   }
 
   //Generate Refresh Token

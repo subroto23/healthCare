@@ -13,6 +13,7 @@ router.post(
 );
 
 router.post("/refresh-token", authController.refreshToken);
+
 router.post(
   "/change-password",
   authGuard(

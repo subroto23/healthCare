@@ -12,7 +12,14 @@ const client_1 = require("@prisma/client");
 const ValidatorRequest_1 = __importDefault(require("../../middleware/ValidatorRequest"));
 const specialities_validation_1 = require("./specialities.validation");
 const routes = express_1.default.Router();
-routes.get("/", (0, authGuard_1.default)(client_1.UserRole.ADMIN, client_1.UserRole.SUPER_ADMIN, client_1.UserRole.PATIENT, client_1.UserRole.DOCTOR), specialities_controller_1.specialitiesController.getAllSpecialites);
+routes.get("/", 
+// authGuard(
+//   UserRole.ADMIN,
+//   UserRole.SUPER_ADMIN,
+//   UserRole.PATIENT,
+//   UserRole.DOCTOR
+// ),
+specialities_controller_1.specialitiesController.getAllSpecialites);
 //Create
 routes.post("/create-speciality", (0, authGuard_1.default)(client_1.UserRole.ADMIN, client_1.UserRole.SUPER_ADMIN), fileUploader_1.fileUploader.upload.single("file"), fileUploader_1.fileUploader.fileAndDataParser, (0, ValidatorRequest_1.default)(specialities_validation_1.specialitiesValidationSchema.createSpecilitiesValidationSchema), specialities_controller_1.specialitiesController.createSpecilities);
 //Delete

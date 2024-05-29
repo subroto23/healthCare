@@ -13,10 +13,14 @@ const appointment_services_1 = require("./app/modules/appointment/appointment.se
 const node_cron_1 = __importDefault(require("node-cron"));
 const app = (0, express_1.default)();
 //middleware Declerence
-app.use((0, cors_1.default)());
+app.use((0, cookie_parser_1.default)());
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
-app.use((0, cookie_parser_1.default)());
+const corsOptions = {
+    origin: "http://localhost:3000",
+    credentials: true,
+};
+app.use((0, cors_1.default)(corsOptions));
 //Routes Declearation
 app.use("/api/v1", routes_1.default);
 //Unpaid Appointments Deleted

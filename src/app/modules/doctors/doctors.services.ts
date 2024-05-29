@@ -1,4 +1,4 @@
-import { Doctor, Prisma, UserStatus } from "@prisma/client";
+import { Doctor, Prisma, UserRole, UserStatus } from "@prisma/client";
 import bcrypt from "bcrypt";
 import { fileUploader } from "../../shared/fileUploader";
 import { prisma } from "../../constants/globalConstant";
@@ -25,6 +25,7 @@ const createDoctorIntoDB = async (file: any, payload: any) => {
   const userData = {
     email: payload.doctor.email,
     password: hashPassword,
+    role: UserRole.DOCTOR,
   };
 
   //Transaction based creation usar and Admin
@@ -48,7 +49,6 @@ const getAllDoctorFromDB = async (filter: any, options: IOptions) => {
   const { search, specialties, ...filterData } = filter;
   const { skip, page, limit, sort, sortOrder } = calculatePagination(options);
   const andCondition: Prisma.DoctorWhereInput[] = [];
-
   //Search Conditon Query
   if (filter.search) {
     andCondition.push({

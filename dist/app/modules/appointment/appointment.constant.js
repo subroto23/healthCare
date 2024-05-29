@@ -5,4 +5,4 @@ exports.appointmentFiltedableField = [
     "paymentStatus ",
     "status",
 ];
-exports.appointmentDeletedAfter = 59;
+exports.appointmentDeletedAfter = 10;

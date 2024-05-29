@@ -12,8 +12,10 @@ const login = catchAsync(async (req: Request, res: Response) => {
 
   //Setup Refresh Token
   res.cookie("refreshToken", result.refreshToken, {
-    secure: config.node_env ? false : true,
+    // secure: config.node_env ? false : true,
+    secure: true,
     httpOnly: true,
+    sameSite: "lax",
   });
 
   //Send Resposne
@@ -32,7 +34,6 @@ const login = catchAsync(async (req: Request, res: Response) => {
 const refreshToken = catchAsync(async (req: Request, res: Response) => {
   const { refreshToken } = req?.cookies;
   const result = await authServices.refreshToken(refreshToken);
-
   //Send Resposne
   return sendResponse(res, {
     statusCode: httpStatus.OK,

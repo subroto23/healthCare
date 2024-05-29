@@ -17,14 +17,15 @@ const CatchAsync_1 = __importDefault(require("../../utls/CatchAsync"));
 const SendResponse_1 = __importDefault(require("../../utls/SendResponse"));
 const http_status_1 = __importDefault(require("http-status"));
 const auth_services_1 = require("./auth.services");
-const config_1 = __importDefault(require("../../config"));
 const login = (0, CatchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const loggedInValues = req.body;
     const result = yield auth_services_1.authServices.loging(loggedInValues);
     //Setup Refresh Token
     res.cookie("refreshToken", result.refreshToken, {
-        secure: config_1.default.node_env ? false : true,
+        // secure: config.node_env ? false : true,
+        secure: true,
         httpOnly: true,
+        sameSite: "lax",
     });
     //Send Resposne
     return (0, SendResponse_1.default)(res, {

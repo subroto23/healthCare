@@ -15,6 +15,10 @@ routes.post(
 );
 
 //Get ALl Schedule
-routes.get("/", authGuard(UserRole.DOCTOR), scheduleController.getAllSchedule);
+routes.get(
+  "/",
+  authGuard(UserRole.DOCTOR, UserRole.ADMIN, UserRole.SUPER_ADMIN),
+  scheduleController.getAllSchedule
+);
 
 export const scheduleRoutes = routes;

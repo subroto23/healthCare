@@ -69,9 +69,10 @@ const sslConfigiration = (payload) => __awaiter(void 0, void 0, void 0, function
 //Validation
 const validatePayements = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        const validationUrl = `${config_1.default.payment.sslValidationApi}?val_id=${payload.val_id}&store_id=${config_1.default.payment.storeId}&store_passwd=${config_1.default.payment.storePassword}&format=json`;
         const response = yield (0, axios_1.default)({
             method: "GET",
-            url: `${config_1.default.payment.sslValidationApi}?val_id=${payload.val_id}&store_id=${config_1.default.payment.storeId}&store_passwd=${config_1.default.payment.storePassword}&format=json`,
+            url: validationUrl,
         });
         return response.data;
     }
