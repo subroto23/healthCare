@@ -4,18 +4,17 @@ import catchAsync from "../../utls/CatchAsync";
 import sendResponse from "../../utls/SendResponse";
 import httpStatus from "http-status";
 import { authServices } from "./auth.services";
-import config from "../../config";
 
 const login = catchAsync(async (req: Request, res: Response) => {
   const loggedInValues = req.body;
   const result = await authServices.loging(loggedInValues);
 
   //Setup Refresh Token
-  res.cookie("refreshToken", result.refreshToken, {
-    // secure: config.node_env ? false : true,
-    secure: true,
+  res.cookie("refreshToken", result?.refreshToken, {
     httpOnly: true,
-    sameSite: "lax",
+    secure: true,
+    sameSite: "none",
+    domain: "localhost",
   });
 
   //Send Resposne

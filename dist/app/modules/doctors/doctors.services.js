@@ -137,6 +137,13 @@ const getSingleDoctorFromDB = (id) => __awaiter(void 0, void 0, void 0, function
             id,
             isDeleted: false,
         },
+        include: {
+            doctorSpecialties: {
+                include: {
+                    specialty: true,
+                },
+            },
+        },
     });
     return result;
 });
@@ -175,6 +182,12 @@ const updateDoctorFromDB = (id, specialities, data) => __awaiter(void 0, void 0,
             //Delete Specialities from Doctor
             const createSpecialists = specialities.filter((aryObj) => aryObj.isDeleted === false);
             for (const spData of createSpecialists) {
+                //if Specialities already exist then return
+                for (const existSpeciality of doctorUpdatedInfo === null || doctorUpdatedInfo === void 0 ? void 0 : doctorUpdatedInfo.doctorSpecialties) {
+                    if ((existSpeciality === null || existSpeciality === void 0 ? void 0 : existSpeciality.specialitiesId) === (spData === null || spData === void 0 ? void 0 : spData.specialistId)) {
+                        return;
+                    }
+                }
                 yield tx.doctorSpecialties.create({
                     data: {
                         doctorId: doctorUpdatedInfo.id,

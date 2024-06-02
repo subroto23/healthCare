@@ -7,7 +7,12 @@ const routes = express.Router();
 routes.get("/", doctorController.getAllDoctor);
 routes.get(
   "/:id",
-  authGuard(UserRole.ADMIN, UserRole.SUPER_ADMIN),
+  authGuard(
+    UserRole.ADMIN,
+    UserRole.SUPER_ADMIN,
+    UserRole.PATIENT,
+    UserRole.DOCTOR
+  ),
   doctorController.getSingleDoctor
 );
 routes.delete(

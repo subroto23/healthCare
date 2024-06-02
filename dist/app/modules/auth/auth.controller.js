@@ -21,11 +21,11 @@ const login = (0, CatchAsync_1.default)((req, res) => __awaiter(void 0, void 0, 
     const loggedInValues = req.body;
     const result = yield auth_services_1.authServices.loging(loggedInValues);
     //Setup Refresh Token
-    res.cookie("refreshToken", result.refreshToken, {
-        // secure: config.node_env ? false : true,
-        secure: true,
+    res.cookie("refreshToken", result === null || result === void 0 ? void 0 : result.refreshToken, {
         httpOnly: true,
-        sameSite: "lax",
+        secure: true,
+        sameSite: "none",
+        domain: "localhost",
     });
     //Send Resposne
     return (0, SendResponse_1.default)(res, {

@@ -124,6 +124,13 @@ const getSingleDoctorFromDB = async (id: string) => {
       id,
       isDeleted: false,
     },
+    include: {
+      doctorSpecialties: {
+        include: {
+          specialty: true,
+        },
+      },
+    },
   });
   return result;
 };
@@ -172,8 +179,13 @@ const updateDoctorFromDB = async (
       const createSpecialists = specialities.filter(
         (aryObj: any) => aryObj.isDeleted === false
       );
-
       for (const spData of createSpecialists) {
+        //if Specialities already exist then return
+        for (const existSpeciality of doctorUpdatedInfo?.doctorSpecialties) {
+          if (existSpeciality?.specialitiesId === spData?.specialistId) {
+            return;
+          }
+        }
         await tx.doctorSpecialties.create({
           data: {
             doctorId: doctorUpdatedInfo.id,
