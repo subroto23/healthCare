@@ -115,7 +115,11 @@ const getAllDoctorFromDB = (filter, options) => __awaiter(void 0, void 0, void 0
             [sort]: sortOrder,
         },
         include: {
-            doctorSpecialties: true,
+            doctorSpecialties: {
+                include: {
+                    specialty: true,
+                },
+            },
         },
     });
     const total = yield globalConstant_1.prisma.doctor.count({

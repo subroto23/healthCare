@@ -17,6 +17,12 @@ routes.get(
   authGuard(UserRole.DOCTOR),
   doctorScheduleController.getAllDoctorSchedule
 );
+//Get ALl Schedule for patient
+routes.get(
+  "/:id",
+  authGuard(UserRole.PATIENT, UserRole.ADMIN),
+  doctorScheduleController.getAllDoctorScheduleForPatient
+);
 
 //Delete Doctor Schedule
 routes.delete(

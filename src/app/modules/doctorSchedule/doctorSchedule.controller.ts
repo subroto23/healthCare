@@ -43,6 +43,30 @@ const getAllDoctorSchedule = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
+//get ALl Schedule for patient
+const getAllDoctorScheduleForPatient = catchAsync(
+  async (req: Request, res: Response) => {
+    const user = req.user as JwtPayload;
+    const { id } = req.params;
+    const filter = pick(req?.query, doctorScheduleFilteredAbleData);
+    const options = pick(req?.query, pageAndSortConstants);
+    const result =
+      await doctorScheduleServices.getAllDoctorScheduleForPatientFromDB(
+        user,
+        filter,
+        options,
+        id
+      );
+    //Send Response
+    return sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "All Doctor schedule reterived successfully",
+      meta: result?.meta,
+      data: result,
+    });
+  }
+);
 
 //Delete Schedule
 const deleteDoctorSchedule = catchAsync(async (req: Request, res: Response) => {
@@ -61,4 +85,5 @@ export const doctorScheduleController = {
   createDoctorSchedule,
   getAllDoctorSchedule,
   deleteDoctorSchedule,
+  getAllDoctorScheduleForPatient,
 };

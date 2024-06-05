@@ -1,4 +1,4 @@
-import { Doctor, Patient, Prisma, UserStatus } from "@prisma/client";
+import { Prisma, UserStatus } from "@prisma/client";
 import bcrypt from "bcrypt";
 import { fileUploader } from "../../shared/fileUploader";
 import { prisma } from "../../constants/globalConstant";
@@ -111,6 +111,10 @@ const getSinglePatientFromDB = async (id: string) => {
       id,
       isDeleted: false,
     },
+    include: {
+      patientHealthData: true,
+      medicalReport: true,
+    },
   });
   return result;
 };
@@ -146,7 +150,7 @@ const updatePatientFromDB = async (id: string, payload: any) => {
         create: { ...patientHealthData, patientId: pataientInfo.id },
       });
     }
-    if (medicalReport) {
+    if (Object.keys(medicalReport).length >= 2) {
       await tx.medicalReport.create({
         data: { ...medicalReport, patientId: pataientInfo.id },
       });

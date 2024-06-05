@@ -13,6 +13,8 @@ const routes = express_1.default.Router();
 routes.post("/create-schedule", (0, authGuard_1.default)(client_1.UserRole.DOCTOR, client_1.UserRole.ADMIN, client_1.UserRole.PATIENT), doctorSchedule_controller_1.doctorScheduleController.createDoctorSchedule);
 //Get ALl Schedule
 routes.get("/", (0, authGuard_1.default)(client_1.UserRole.DOCTOR), doctorSchedule_controller_1.doctorScheduleController.getAllDoctorSchedule);
+//Get ALl Schedule for patient
+routes.get("/:id", (0, authGuard_1.default)(client_1.UserRole.PATIENT, client_1.UserRole.ADMIN), doctorSchedule_controller_1.doctorScheduleController.getAllDoctorScheduleForPatient);
 //Delete Doctor Schedule
 routes.delete("/:id", (0, authGuard_1.default)(client_1.UserRole.DOCTOR), doctorSchedule_controller_1.doctorScheduleController.deleteDoctorSchedule);
 exports.doctorScheduleRoutes = routes;

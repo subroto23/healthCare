@@ -107,6 +107,77 @@ const getAllDoctorScheduleFromDB = (user, filter, options) => __awaiter(void 0, 
         data: result,
     };
 });
+//Get all Schedule for patient
+const getAllDoctorScheduleForPatientFromDB = (user, filter, options, id) => __awaiter(void 0, void 0, void 0, function* () {
+    const { startDate, endDate } = filter, filterData = __rest(filter, ["startDate", "endDate"]);
+    const { skip, page, limit } = (0, pageCalculation_1.default)(options);
+    const andCondition = [];
+    //Start Dane and End Date Time between Data
+    if (startDate && endDate) {
+        andCondition.push({
+            AND: [
+                {
+                    schedule: {
+                        startDate: {
+                            gte: new Date(startDate),
+                        },
+                    },
+                },
+                {
+                    schedule: {
+                        endDate: {
+                            lte: new Date(endDate),
+                        },
+                    },
+                },
+            ],
+        });
+    }
+    //Filter Conditons Query
+    if (Object.keys(filterData).length > 0) {
+        if (filterData.isBooked &&
+            typeof filterData.isBooked === "string" &&
+            filterData.isBooked === "true") {
+            filterData.isBooked = true;
+        }
+        else {
+            filterData.isBooked = false;
+        }
+        andCondition.push({
+            AND: Object.keys(filterData).map((keys) => ({
+                [keys]: {
+                    equals: filterData[keys],
+                },
+            })),
+        });
+    }
+    andCondition.push({
+        AND: {
+            doctorId: id,
+            isBooked: false,
+        },
+    });
+    const whereCondition = { AND: andCondition };
+    const result = yield globalConstant_1.prisma.doctorSchedules.findMany({
+        where: whereCondition,
+        skip,
+        take: limit,
+        include: {
+            schedule: true,
+        },
+    });
+    const total = yield globalConstant_1.prisma.doctorSchedules.count({
+        where: whereCondition,
+    });
+    return {
+        meta: {
+            page,
+            limit,
+            total,
+        },
+        data: result,
+    };
+});
 //Delete Schedule
 const deleteScheduleFromDB = (user, id) => __awaiter(void 0, void 0, void 0, function* () {
     const userInfo = yield globalConstant_1.prisma.doctor.findFirstOrThrow({
@@ -139,5 +210,6 @@ const deleteScheduleFromDB = (user, id) => __awaiter(void 0, void 0, void 0, fun
 exports.doctorScheduleServices = {
     createDoctorScheduleIntoDB,
     getAllDoctorScheduleFromDB,
+    getAllDoctorScheduleForPatientFromDB,
     deleteScheduleFromDB,
 };

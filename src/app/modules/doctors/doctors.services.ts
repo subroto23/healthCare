@@ -101,7 +101,11 @@ const getAllDoctorFromDB = async (filter: any, options: IOptions) => {
       [sort]: sortOrder,
     },
     include: {
-      doctorSpecialties: true,
+      doctorSpecialties: {
+        include: {
+          specialty: true,
+        },
+      },
     },
   });
   const total = await prisma.doctor.count({

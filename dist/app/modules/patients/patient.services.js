@@ -123,6 +123,10 @@ const getSinglePatientFromDB = (id) => __awaiter(void 0, void 0, void 0, functio
             id,
             isDeleted: false,
         },
+        include: {
+            patientHealthData: true,
+            medicalReport: true,
+        },
     });
     return result;
 });
@@ -156,7 +160,7 @@ const updatePatientFromDB = (id, payload) => __awaiter(void 0, void 0, void 0, f
                 create: Object.assign(Object.assign({}, patientHealthData), { patientId: pataientInfo.id }),
             });
         }
-        if (medicalReport) {
+        if (Object.keys(medicalReport).length >= 2) {
             yield tx.medicalReport.create({
                 data: Object.assign(Object.assign({}, medicalReport), { patientId: pataientInfo.id }),
             });

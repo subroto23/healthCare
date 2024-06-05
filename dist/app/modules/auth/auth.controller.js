@@ -22,10 +22,9 @@ const login = (0, CatchAsync_1.default)((req, res) => __awaiter(void 0, void 0, 
     const result = yield auth_services_1.authServices.loging(loggedInValues);
     //Setup Refresh Token
     res.cookie("refreshToken", result === null || result === void 0 ? void 0 : result.refreshToken, {
-        httpOnly: true,
-        secure: true,
+        httpOnly: false,
+        secure: false,
         sameSite: "none",
-        domain: "localhost",
     });
     //Send Resposne
     return (0, SendResponse_1.default)(res, {

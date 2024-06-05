@@ -11,10 +11,9 @@ const login = catchAsync(async (req: Request, res: Response) => {
 
   //Setup Refresh Token
   res.cookie("refreshToken", result?.refreshToken, {
-    httpOnly: true,
-    secure: true,
+    httpOnly: false,
+    secure: false,
     sameSite: "none",
-    domain: "localhost",
   });
 
   //Send Resposne

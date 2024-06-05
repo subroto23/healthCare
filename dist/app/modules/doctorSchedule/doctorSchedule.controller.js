@@ -46,6 +46,22 @@ const getAllDoctorSchedule = (0, CatchAsync_1.default)((req, res) => __awaiter(v
         data: result,
     });
 }));
+//get ALl Schedule for patient
+const getAllDoctorScheduleForPatient = (0, CatchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = req.user;
+    const { id } = req.params;
+    const filter = (0, pickFields_1.default)(req === null || req === void 0 ? void 0 : req.query, doctorSchedule_constants_1.doctorScheduleFilteredAbleData);
+    const options = (0, pickFields_1.default)(req === null || req === void 0 ? void 0 : req.query, globalConstant_1.pageAndSortConstants);
+    const result = yield doctorSchedule_service_1.doctorScheduleServices.getAllDoctorScheduleForPatientFromDB(user, filter, options, id);
+    //Send Response
+    return (0, SendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: "All Doctor schedule reterived successfully",
+        meta: result === null || result === void 0 ? void 0 : result.meta,
+        data: result,
+    });
+}));
 //Delete Schedule
 const deleteDoctorSchedule = (0, CatchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const user = req.user;
@@ -63,4 +79,5 @@ exports.doctorScheduleController = {
     createDoctorSchedule,
     getAllDoctorSchedule,
     deleteDoctorSchedule,
+    getAllDoctorScheduleForPatient,
 };
