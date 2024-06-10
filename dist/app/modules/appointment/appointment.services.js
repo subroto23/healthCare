@@ -143,6 +143,7 @@ const getMyAppoinment = (user, filter, options) => __awaiter(void 0, void 0, voi
             : {
                 schedule: true,
                 doctor: true,
+                payment: true,
             },
     });
     const total = yield globalConstant_1.prisma.appointment.count({

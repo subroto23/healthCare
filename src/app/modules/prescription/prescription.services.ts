@@ -14,7 +14,6 @@ const createPrescriptionIntoDB = async (
   const appointMentInfo = await prisma.appointment.findUniqueOrThrow({
     where: {
       id: payload.appointmentId,
-      status: AppointmentStatus.COMPLETED,
       paymentStatus: PaymentStatus.PAID,
     },
     include: {

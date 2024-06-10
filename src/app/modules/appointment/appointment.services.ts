@@ -145,8 +145,10 @@ const getMyAppoinment = async (user: JwtPayload, filter: any, options: any) => {
         : {
             schedule: true,
             doctor: true,
+            payment: true,
           },
   });
+
   const total = await prisma.appointment.count({
     where: whereCondition,
   });

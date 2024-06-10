@@ -22,7 +22,6 @@ const createPrescriptionIntoDB = (user, payload) => __awaiter(void 0, void 0, vo
     const appointMentInfo = yield globalConstant_1.prisma.appointment.findUniqueOrThrow({
         where: {
             id: payload.appointmentId,
-            status: client_1.AppointmentStatus.COMPLETED,
             paymentStatus: client_1.PaymentStatus.PAID,
         },
         include: {
