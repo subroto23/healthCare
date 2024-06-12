@@ -152,9 +152,10 @@ const forgottenPassword = async (userEmail: string) => {
     throw new ApiError(403, "Your login credentials expired");
   }
   //Reset Link Creation
-  const resetLink = `${config.frontendUrl}/api/v1/auth/reset-password?user=${userData.id}&token=${resetToken}`;
+  const resetLink = `${config.frontendUrl}/reset-password?user=${userData.id}&token=${resetToken}`;
   const html = `
      <div>
+     
       <p>Reset Your Password</p>
         <p>
           <a href=${resetLink}>Reset Your Password</a>

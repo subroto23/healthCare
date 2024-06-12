@@ -129,9 +129,10 @@ const forgottenPassword = (userEmail) => __awaiter(void 0, void 0, void 0, funct
         throw new apiError_1.default(403, "Your login credentials expired");
     }
     //Reset Link Creation
-    const resetLink = `${config_1.default.frontendUrl}/api/v1/auth/reset-password?user=${userData.id}&token=${resetToken}`;
+    const resetLink = `${config_1.default.frontendUrl}/reset-password?user=${userData.id}&token=${resetToken}`;
     const html = `
      <div>
+     
       <p>Reset Your Password</p>
         <p>
           <a href=${resetLink}>Reset Your Password</a>

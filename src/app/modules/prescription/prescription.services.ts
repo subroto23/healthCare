@@ -40,9 +40,9 @@ const createPrescriptionIntoDB = async (
   return result;
 };
 
+//Get my Prescriptons
 const getmyPrescription = async (user: JwtPayload, options: IOptions) => {
   const { skip, page, limit, sort, sortOrder } = calculatePagination(options);
-
   const userInfo = await prisma.patient.findUniqueOrThrow({
     where: {
       email: user.email,
@@ -52,6 +52,10 @@ const getmyPrescription = async (user: JwtPayload, options: IOptions) => {
   const result = await prisma.prescription.findMany({
     where: {
       patientId: userInfo.id,
+    },
+    include: {
+      doctor: true,
+      patient: true,
     },
     skip,
     take: limit,
@@ -115,6 +119,7 @@ const getSinglePresCriptions = async (id: string) => {
     },
     include: {
       doctor: true,
+      patient: true,
     },
   });
 

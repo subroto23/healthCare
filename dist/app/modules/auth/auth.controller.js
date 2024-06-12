@@ -78,7 +78,8 @@ const forgottenPassword = (0, CatchAsync_1.default)((req, res) => __awaiter(void
 }));
 //Reset Password
 const resetPassword = (0, CatchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const token = req.headers.authorization || "";
+    var _a;
+    const token = ((_a = req.body) === null || _a === void 0 ? void 0 : _a.token) || "";
     const result = yield auth_services_1.authServices.resetPassword(token, req.body);
     //Send Resposne
     return (0, SendResponse_1.default)(res, {

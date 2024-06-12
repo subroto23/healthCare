@@ -46,6 +46,7 @@ const createPrescriptionIntoDB = (user, payload) => __awaiter(void 0, void 0, vo
     });
     return result;
 });
+//Get my Prescriptons
 const getmyPrescription = (user, options) => __awaiter(void 0, void 0, void 0, function* () {
     const { skip, page, limit, sort, sortOrder } = (0, pageCalculation_1.default)(options);
     const userInfo = yield globalConstant_1.prisma.patient.findUniqueOrThrow({
@@ -56,6 +57,10 @@ const getmyPrescription = (user, options) => __awaiter(void 0, void 0, void 0, f
     const result = yield globalConstant_1.prisma.prescription.findMany({
         where: {
             patientId: userInfo.id,
+        },
+        include: {
+            doctor: true,
+            patient: true,
         },
         skip,
         take: limit,
@@ -111,6 +116,7 @@ const getSinglePresCriptions = (id) => __awaiter(void 0, void 0, void 0, functio
         },
         include: {
             doctor: true,
+            patient: true,
         },
     });
     return result;
