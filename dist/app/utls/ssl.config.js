@@ -26,7 +26,7 @@ const sslConfigiration = (payload) => __awaiter(void 0, void 0, void 0, function
             total_amount: amount,
             currency: "BDT",
             tran_id: tx, // use unique tran_id for each api call
-            success_url: config_1.default.payment.successUrl,
+            success_url: `https://health-care-taupe-eight.vercel.app/api/v1/payments/validation-payment?tran_id=${tx}&status=VALID`,
             fail_url: config_1.default.payment.failUrl,
             cancel_url: config_1.default.payment.cancelUrl,
             ipn_url: "http://localhost:3030/ipn",

@@ -9,12 +9,7 @@ const login = catchAsync(async (req: Request, res: Response) => {
   const loggedInValues = req.body;
   const result = await authServices.loging(loggedInValues);
 
-  //Setup Refresh Token
-  res.cookie("refreshToken", result?.refreshToken, {
-    httpOnly: false,
-    secure: false,
-    sameSite: "none",
-  });
+  res.cookie("refreshToken", result?.refreshToken);
 
   //Send Resposne
   return sendResponse(res, {

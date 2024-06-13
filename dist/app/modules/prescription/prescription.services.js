@@ -32,18 +32,31 @@ const createPrescriptionIntoDB = (user, payload) => __awaiter(void 0, void 0, vo
     if (!(user.email === appointMentInfo.doctor.email)) {
         throw new apiError_1.default(http_status_1.default.BAD_REQUEST, "This Patient is not your");
     }
-    const result = yield globalConstant_1.prisma.prescription.create({
-        data: {
-            appointmentId: appointMentInfo.id,
-            doctorId: appointMentInfo.doctorId,
-            patientId: appointMentInfo.patientId,
-            instructions: payload.instructions,
-            followUpDate: payload.followUpDate || null || undefined,
-        },
-        include: {
-            patient: true,
-        },
-    });
+    //Trnajection Based Prescription Create
+    const result = yield globalConstant_1.prisma.$transaction((tx) => __awaiter(void 0, void 0, void 0, function* () {
+        const prescriptionCreate = yield tx.prescription.create({
+            data: {
+                appointmentId: appointMentInfo.id,
+                doctorId: appointMentInfo.doctorId,
+                patientId: appointMentInfo.patientId,
+                instructions: payload.instructions,
+                followUpDate: payload.followUpDate || null || undefined,
+            },
+            include: {
+                patient: true,
+            },
+        });
+        //Update Status of appointmnet
+        yield tx.appointment.update({
+            where: {
+                id: appointMentInfo.id,
+            },
+            data: {
+                status: "COMPLETED",
+            },
+        });
+        return prescriptionCreate;
+    }));
     return result;
 });
 //Get my Prescriptons

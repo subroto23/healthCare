@@ -125,6 +125,18 @@ const getAllDoctorScheduleForPatientFromDB = async (
         },
       ],
     });
+  } else {
+    andCondition.push({
+      AND: [
+        {
+          schedule: {
+            startDate: {
+              gte: new Date(),
+            },
+          },
+        },
+      ],
+    });
   }
 
   //Filter Conditons Query

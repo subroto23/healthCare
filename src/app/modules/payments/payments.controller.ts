@@ -26,7 +26,7 @@ const validatePayment = catchAsync(async (req: Request, res: Response) => {
   return sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: "Payment schedule successfully",
+    message: "Payment schedule successfully.",
     data: result,
   });
 });

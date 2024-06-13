@@ -20,12 +20,7 @@ const auth_services_1 = require("./auth.services");
 const login = (0, CatchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const loggedInValues = req.body;
     const result = yield auth_services_1.authServices.loging(loggedInValues);
-    //Setup Refresh Token
-    res.cookie("refreshToken", result === null || result === void 0 ? void 0 : result.refreshToken, {
-        httpOnly: false,
-        secure: false,
-        sameSite: "none",
-    });
+    res.cookie("refreshToken", result === null || result === void 0 ? void 0 : result.refreshToken);
     //Send Resposne
     return (0, SendResponse_1.default)(res, {
         statusCode: http_status_1.default.OK,

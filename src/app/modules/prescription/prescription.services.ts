@@ -25,18 +25,32 @@ const createPrescriptionIntoDB = async (
     throw new ApiError(httpStatus.BAD_REQUEST, "This Patient is not your");
   }
 
-  const result = await prisma.prescription.create({
-    data: {
-      appointmentId: appointMentInfo.id,
-      doctorId: appointMentInfo.doctorId,
-      patientId: appointMentInfo.patientId,
-      instructions: payload.instructions,
-      followUpDate: payload.followUpDate || null || undefined,
-    },
-    include: {
-      patient: true,
-    },
+  //Trnajection Based Prescription Create
+  const result = await prisma.$transaction(async (tx) => {
+    const prescriptionCreate = await tx.prescription.create({
+      data: {
+        appointmentId: appointMentInfo.id,
+        doctorId: appointMentInfo.doctorId,
+        patientId: appointMentInfo.patientId,
+        instructions: payload.instructions,
+        followUpDate: payload.followUpDate || null || undefined,
+      },
+      include: {
+        patient: true,
+      },
+    });
+    //Update Status of appointmnet
+    await tx.appointment.update({
+      where: {
+        id: appointMentInfo.id,
+      },
+      data: {
+        status: "COMPLETED",
+      },
+    });
+    return prescriptionCreate;
   });
+
   return result;
 };
 

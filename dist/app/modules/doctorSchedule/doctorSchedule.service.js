@@ -133,6 +133,19 @@ const getAllDoctorScheduleForPatientFromDB = (user, filter, options, id) => __aw
             ],
         });
     }
+    else {
+        andCondition.push({
+            AND: [
+                {
+                    schedule: {
+                        startDate: {
+                            gte: new Date(),
+                        },
+                    },
+                },
+            ],
+        });
+    }
     //Filter Conditons Query
     if (Object.keys(filterData).length > 0) {
         if (filterData.isBooked &&
