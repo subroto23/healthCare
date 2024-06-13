@@ -37,7 +37,7 @@ const validatePayment = (0, CatchAsync_1.default)((req, res) => __awaiter(void 0
     return (0, SendResponse_1.default)(res, {
         statusCode: http_status_1.default.OK,
         success: true,
-        message: "Payment schedule successfully",
+        message: "Payment schedule successfully.",
         data: result,
     });
 }));
